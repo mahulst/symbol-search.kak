@@ -21,10 +21,12 @@ pub struct Config {
 pub enum Language {
   C,
   Go,
+  Odin,
   Haskell,
   Python,
   Rust,
   TypeScript,
+  Vue,
 }
 
 /// A configuration stanza. This structure does not exactly reflect the TOML configuration.
@@ -51,10 +53,12 @@ impl Language {
     match self {
       Self::C => &["c", "h"],
       Self::Go => &["go"],
+      Self::Odin => &["odin"],
       Self::Haskell => &["hs"],
       Self::Python => &["py"],
       Self::Rust => &["rs"],
       Self::TypeScript => &["js", "jsx", "ts", "tsx"],
+      Self::Vue => &["vue"],
     }
   }
 
@@ -63,9 +67,11 @@ impl Language {
       Self::C => tree_sitter_c::LANGUAGE.into(),
       Self::Go => tree_sitter_go::LANGUAGE.into(),
       Self::Haskell => tree_sitter_haskell::LANGUAGE.into(),
+      Self::Odin => tree_sitter_odin::LANGUAGE.into(),
       Self::Python => tree_sitter_python::LANGUAGE.into(),
       Self::Rust => tree_sitter_rust::LANGUAGE.into(),
       Self::TypeScript => tree_sitter_typescript::LANGUAGE_TSX.into(),
+      Self::Vue => tree_sitter_typescript::LANGUAGE_TSX.into(),
     }
   }
 
@@ -81,10 +87,12 @@ impl FromStr for Language {
     match s {
       "c" | "h" => Ok(Self::C),
       "go" => Ok(Self::Go),
+      "odin" => Ok(Self::Odin),
       "hs" => Ok(Self::Haskell),
       "py" => Ok(Self::Python),
       "rs" => Ok(Self::Rust),
       "js" | "jsx" | "ts" | "tsx" => Ok(Self::TypeScript),
+      "vue" => Ok(Self::Vue),
       _ => Err(()),
     }
   }

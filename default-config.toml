@@ -1,29 +1,37 @@
 [fzf_settings]
 preview_window = "70%"
 
-[rust]
-enum     = "(enum_item name: (type_identifier) @name)"
-struct   = "(struct_item name: (type_identifier) @name)"
-method   = "(declaration_list (function_item name: (identifier) @name))"
-function = "(function_item name: (identifier) @name)"
-# const  = "entity.name.constant.rust"
-impl     = "(impl_item type: (type_identifier) @name)"
-macro    = "(macro_definition name: (identifier) @name)"
-module   = "(mod_item name: (identifier) @name)"
-trait    = "(trait_item name: (type_identifier) @name)"
-type     = "(type_item name: (type_identifier) @name)"
+# [rust]
+# enum     = "(enum_item name: (type_identifier) @name)"
+# struct   = "(struct_item name: (type_identifier) @name)"
+# method   = "(declaration_list (function_item name: (identifier) @name))"
+# function = "(function_item name: (identifier) @name)"
+# # const  = "entity.name.constant.rust"
+# impl     = "(impl_item type: (type_identifier) @name)"
+# macro    = "(macro_definition name: (identifier) @name)"
+# module   = "(mod_item name: (identifier) @name)"
+# trait    = "(trait_item name: (type_identifier) @name)"
+# type     = "(type_item name: (type_identifier) @name)"
 
-[python]
-function = "(function_definition name: (identifier) @name)"
-class = "(class_definition name: (identifier) @name)"
+[odin]
+struct   = "(struct_declaration (identifier) @name \"::\")"
+method   = "(procedure_declaration (identifier) @name)"
+type = "(const_declaration (identifier) @name)"
+module   = " (import_declaration alias: (identifier) @name ) "
+enum = "(enum_declaration (identifier) @name \"::\")"
+# type     = "(type_declaration name: (identifier) @name)"
 
-[go]
-# function = [
-#   "entity.name.function.go"
-#   "variable.other.readwrite.declaration.go - meta.block.go"
-# ]
-# type = "entity.name.type.go"
-# const = "variable.other.constant.declaration.go - meta.block.go"
+# [python]
+# function = "(function_definition name: (identifier) @name)"
+# class = "(class_definition name: (identifier) @name)"
+
+# [go]
+# # function = [
+# #   "entity.name.function.go"
+# #   "variable.other.readwrite.declaration.go - meta.block.go"
+# # ]
+# # type = "entity.name.type.go"
+# # const = "variable.other.constant.declaration.go - meta.block.go"
 
 [typescript]
 class = "(class_declaration name: (type_identifier) @name)"
@@ -33,18 +41,27 @@ function = [
   "(program (lexical_declaration (variable_declarator name: (identifier) @name value: (arrow_function))))",
 ]
 
-[c]
-struct = "(struct_specifier name: (type_identifier) @name)"
-type = [
-  "(declaration type: (union_specifier name: (type_identifier) @name))",
-  "(type_definition declarator: (type_identifier) @name)"
+[vue]
+class = "(class_declaration name: (type_identifier) @name)"
+function = [
+  "(function_declaration name: (identifier) @name)",
+  "(program (lexical_declaration (variable_declarator name: (identifier) @name value: (arrow_function))))",
 ]
-function = "(function_declarator declarator: (identifier) @name)"
-enum = "(enum_specifier name: (type_identifier) @name)"
+interface = "(interface_declaration name: (type_identifier) @name)"
+type = "(type_alias_declaration name: (type_identifier) @name)"
 
-[haskell]
-type = [
-  "(type_synomym name: (name) @name)",
-  "(data_type name: (name) @name)",
-]
-function = "(haskell declarations: (declarations (signature name: (variable) @function.name)))"
+# [c]
+# struct = "(struct_specifier name: (type_identifier) @name)"
+# type = [
+#   "(declaration type: (union_specifier name: (type_identifier) @name))",
+#   "(type_definition declarator: (type_identifier) @name)"
+# ]
+# function = "(function_declarator declarator: (identifier) @name)"
+# enum = "(enum_specifier name: (type_identifier) @name)"
+
+# [haskell]
+# type = [
+#   "(type_synomym name: (name) @name)",
+#   "(data_type name: (name) @name)",
+# ]
+# function = "(haskell declarations: (declarations (signature name: (variable) @function.name)))"

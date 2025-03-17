@@ -9,7 +9,7 @@ mod text;
 mod utils;
 mod worker;
 
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
 use anyhow::Context;
 use clap::Parser;
@@ -24,7 +24,7 @@ struct Args {
   /// The default configuration will be applied if this argument is not provided
   /// or if it is set to the empty string.
   #[arg(short, long)]
-  config: Option<String>,
+  donfig: Option<String>,
   /// Directory to cache parsed symbols.
   ///
   /// Files are reparsed if their cached mtime differs from than their current mtime.
@@ -40,7 +40,7 @@ struct Args {
 impl Args {
   /// Returns the parsed provided config or the default one.
   pub fn config(&self) -> Result<Config, anyhow::Error> {
-    if let Some(config) = &self.config {
+    if let Some(config) = &self.donfig {
       if !config.is_empty() {
         return toml::from_str(config).context("from_str");
       }
@@ -67,18 +67,35 @@ fn main() -> Result<(), anyhow::Error> {
 
   let cache = args.cache().context("cache")?;
 
-  let fzf = Fzf::new(&config.fzf_settings).context("fzf")?;
   let fd = Fd::new(config.extensions()).context("fd")?;
+  let mut workers = vec![];
 
   for _ in 0..crate::utils::num_threads() {
-    Worker::new(config, &cache, fd.files(), &fzf).run();
+    workers.push(Worker::new(config, &cache, fd.files()).run());
+  }
+  for worker in workers {
+    worker.join().expect("Thread panicked");
   }
 
+  let files_guard: Vec<_> = cache
+    .files
+    .read()
+    .iter()
+    .flat_map(|a| a.1.entries.iter().map(|entry| (a.0.clone(), entry.clone())))
+    .collect();
+  files_guard.iter().for_each(|(filename, entry)| {
+    let absolute_path = fs::canonicalize(&filename).expect("");
+    println!(
+      "{:<10} {:<30} ({:}:{}:{})",
+      format!("[{:?}]", entry.kind),
+      entry.text,
+      absolute_path.display(),
+      entry.loc.line,
+      entry.loc.column,
+    );
+  });
   // the cache is saved on drop
   drop(cache);
-
-  let selection = fzf.wait().context("wait")?;
-  println!("{selection}");
 
   Ok(())
 }

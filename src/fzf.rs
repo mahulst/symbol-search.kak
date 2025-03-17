@@ -23,7 +23,7 @@ pub struct Sink {
   stdin: Arc<Mutex<ChildStdin>>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entry<P, S> {
   pub path: P,
   pub loc: Loc,

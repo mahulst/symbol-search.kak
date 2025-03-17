@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ext::ResultExt, fzf::Entry};
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct Cache {
   path: Option<PathBuf>,
-  files: Arc<RwLock<HashMap<PathBuf, FileInfo>>>,
+  pub files: Arc<RwLock<HashMap<PathBuf, FileInfo>>>,
 }
 
 const CACHE_FILE_NAME: &str = "cache.json";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FileInfo {
   pub modified: SystemTime,
   /// Cached entries don't contain their own path buffers as it is already

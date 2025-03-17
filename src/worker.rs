@@ -14,16 +14,14 @@ pub struct Worker {
   config: &'static Config,
   cache: Cache,
   files: Receiver<PathBuf>,
-  fzf: Sink,
 }
 
 impl Worker {
-  pub fn new(config: &'static Config, cache: &Cache, files: &Receiver<PathBuf>, fzf: &Fzf) -> Self {
+  pub fn new(config: &'static Config, cache: &Cache, files: &Receiver<PathBuf>) -> Self {
     Self {
       config,
       cache: cache.clone(),
       files: files.clone(),
-      fzf: fzf.sink(),
     }
   }
 
@@ -51,7 +49,7 @@ impl Worker {
       if modified == file_info.modified {
         for Entry { loc, text, kind, .. } in &file_info.entries {
           // cached entries don't contain paths so they are re-inserted here.
-          self.fzf.send(&Entry::new(&path, *loc, text, *kind)).context("send")?;
+          // self.fzf.send(&Entry::new(&path, *loc, text, *kind)).context("send")?;
         }
 
         return Ok(true);
@@ -68,11 +66,10 @@ impl Worker {
     let Some(parser) = Parser::from_path(self.config, &path) else {
       return Ok(());
     };
-
     parser.on_symbol(|symbol| {
       let entry = Entry::new(path, symbol.span.start, symbol.text, symbol.kind);
 
-      self.fzf.send(&entry).context("send")?;
+      // self.fzf.send(&entry).context("send")?;
 
       self.cache.insert_entry(path, entry);
 
