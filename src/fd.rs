@@ -12,7 +12,7 @@ use crossbeam::channel::Receiver;
 
 pub struct Fd {
   files: Receiver<PathBuf>,
-  handle: JoinHandle<()>,
+  _handle: JoinHandle<()>,
 }
 
 impl Fd {
@@ -39,7 +39,10 @@ impl Fd {
       }
     });
 
-    Ok(Self { files: recv, handle })
+    Ok(Self {
+      files: recv,
+      _handle: handle,
+    })
   }
 
   /// Returns the channel of files outputted by fd.

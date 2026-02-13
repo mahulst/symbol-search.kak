@@ -14,7 +14,7 @@ use std::{fs, path::PathBuf};
 use anyhow::Context;
 use clap::Parser;
 
-use crate::{cache::Cache, config::Config, fd::Fd, fzf::Fzf, worker::Worker};
+use crate::{cache::Cache, config::Config, fd::Fd, worker::Worker};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]

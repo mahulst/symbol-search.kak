@@ -1,6 +1,3 @@
-[fzf_settings]
-preview_window = "70%"
-
 # [rust]
 # enum     = "(enum_item name: (type_identifier) @name)"
 # struct   = "(struct_item name: (type_identifier) @name)"

@@ -1,14 +1,8 @@
 use std::{path::PathBuf, thread::JoinHandle, time::SystemTime};
 
-use anyhow::Context;
 use crossbeam::channel::Receiver;
 
-use crate::{
-  cache::Cache,
-  config::Config,
-  fzf::{Entry, Fzf, Sink},
-  parser::Parser,
-};
+use crate::{cache::Cache, config::Config, fzf::Entry, parser::Parser};
 
 pub struct Worker {
   config: &'static Config,
@@ -30,7 +24,7 @@ impl Worker {
       while let Ok(path) = self.files.recv() {
         let modified = std::fs::metadata(&path).expect("metadata").modified().expect("modified");
 
-        if self.use_cached_entries(&path, modified).expect("cached") {
+        if self.use_cached_entries(&path, modified) {
           continue;
         }
 
@@ -42,21 +36,16 @@ impl Worker {
   /// Attempts to use the cache to compute a paths entries.
   ///
   /// Returns true if the cache's entries were used.
-  fn use_cached_entries(&self, path: &PathBuf, modified: SystemTime) -> Result<bool, anyhow::Error> {
+  fn use_cached_entries(&self, path: &PathBuf, modified: SystemTime) -> bool {
     if let Some(file_info) = self.cache.file_info(path) {
       // if the cached file and the current file have the same modified timestamp,
       // use the entries from the cache.
       if modified == file_info.modified {
-        for Entry { loc, text, kind, .. } in &file_info.entries {
-          // cached entries don't contain paths so they are re-inserted here.
-          // self.fzf.send(&Entry::new(&path, *loc, text, *kind)).context("send")?;
-        }
-
-        return Ok(true);
+        return true;
       }
     }
 
-    Ok(false)
+    false
   }
 
   /// Parses a file and inserts its entries into the cache.

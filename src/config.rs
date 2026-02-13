@@ -11,9 +11,6 @@ static DEFAULT_CONFIG: &str = include_str!("../default-config.toml");
 pub struct Config {
   #[serde(flatten, deserialize_with = "deserialize_languages")]
   pub languages: HashMap<Language, LanguageConfig>,
-
-  #[serde(default)]
-  pub fzf_settings: FzfSettings,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq, Hash)]
@@ -124,24 +121,4 @@ where
       })
       .collect(),
   )
-}
-
-#[derive(Deserialize)]
-pub struct FzfSettings {
-  #[serde(default = "FzfSettings::default_preview_window")]
-  pub preview_window: String,
-}
-
-impl FzfSettings {
-  fn default_preview_window() -> String {
-    "70%".to_string()
-  }
-}
-
-impl Default for FzfSettings {
-  fn default() -> Self {
-    Self {
-      preview_window: Self::default_preview_window(),
-    }
-  }
 }

@@ -12,7 +12,7 @@ impl Loc {
   }
 }
 
-#[derive(Clone, Copy, Debug,PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Span {
   pub start: Loc,
   pub end: Loc,
